@@ -14,5 +14,5 @@ export interface UserAddModel {
 }
 
 export interface UserViewModel extends Omit<UserAddModel, "password"> {
-	id: number;
+	id: string;
 }
