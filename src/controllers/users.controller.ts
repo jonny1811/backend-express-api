@@ -16,7 +16,7 @@ class UsersController {
 			const data = await Users.create({ name, email, password: hash, id, type });
 			return res.status(200).json({ data, ok: true });
 		} catch (e) {
-			return res.status(500).json({ msg: "fail to create", status: 500, route: "/create" });
+			return res.status(500).json({ msg: "fail to create a User profile", status: 500, route: "/create" });
 		}
 	}
 
@@ -25,18 +25,31 @@ class UsersController {
 			const limit = Number(req.query.limit) || 10;
 			const offset = Number(req.query.offset) || 0;
 
-			const records = await Users.findAll({ where: {}, limit, offset });
-			return res.status(200).json(records);
+			const users = await Users.findAll({
+				attributes: { exclude: ['password'] },
+				where: {},
+				limit,
+				offset
+			});
+			return res.status(200).json({ users: users, ok: true });
 		} catch (e) {
-			return res.status(500).json({ msg: "fail to read", status: 500, route: "/read" });
+			return res.status(500).json({ msg: "fail to read all users data", status: 500, route: "/read" });
 		}
 	}
 
 	async readByID(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const user = await Users.findOne({ where: { id } });
-			return res.status(200).json({ user: user });
+			const user = await Users.findOne({
+				attributes: { exclude: ['password'] },
+				where: { id }
+			});
+
+			if (!user) {
+				return res.status(404).json({ msg: "Can not find existing User", ok: false });
+			}
+
+			return res.status(200).json({ user: user, ok: true });
 		} catch (e) {
 			return res.status(500).json({ msg: "fail to read by id", status: 500, route: "/read/:id" });
 		}
@@ -46,10 +59,13 @@ class UsersController {
 		try {
 			const { id } = req.params;
 			const { password } = req.body;
-			const user = await Users.findOne({ where: { id } });
+			const user = await Users.findOne({
+				attributes: { exclude: ['password'] },
+				where: { id }
+			});
 			
 			if (!user) {
-				return res.status(404).json({ msg: "Can not find existing user" });
+				return res.status(404).json({ msg: "Can not find existing User", ok: false });
 			}
 			
 			if (password) {
@@ -57,8 +73,8 @@ class UsersController {
 				req.body.password = hash;
 			}
 
-			const updatedUser = await user.update({ ...req.body });
-			return res.status(200).json({ user: updatedUser });
+			await user.update({ ...req.body });
+			return res.status(200).json({ msg: 'Updated User data', ok: true });
 		} catch (e) {
 			return res.status(500).json({
 				msg: "fail to update",
@@ -74,11 +90,11 @@ class UsersController {
 			const user = await Users.findOne({ where: { id } });
 
 			if (!user) {
-				return res.json({ msg: "Can't find existing user" });
+				return res.json({ msg: "Can't find existing User", ok: false });
 			}
 
 			const deletedUser = await user.destroy();
-			return res.status(200).json();
+			return res.status(200).json({ msg: 'Deleted User profile', ok: true });
 		} catch (e) {
 			return res.status(500).json({
 				msg: "fail to delete",

@@ -7,28 +7,28 @@ const userBaseUrl = '/users';
 
 export default (router: Router): void => {
 	router.post(
-		`${userBaseUrl}`,
+		`${userBaseUrl}/create`,
 		UsersValidator.checkCreateUsers(),
 		MiddlewareValidatorError.handleValidationError,
 		UsersController.create
 	);
 	
 	router.get(
-		`${userBaseUrl}`,
+		`${userBaseUrl}/read`,
 		UsersValidator.checkReadUsers(),
 		MiddlewareValidatorError.handleValidationError,
 		UsersController.readPagination
 	);
 	
 	router.get(
-		`${userBaseUrl}/:id`,
+		`${userBaseUrl}/read/:id`,
 		UsersValidator.checkIdParam(),
 		MiddlewareValidatorError.handleValidationError,
 		UsersController.readByID
 	);
 	
 	router.put(
-		`${userBaseUrl}/:id`,
+		`${userBaseUrl}/update/:id`,
 		UsersValidator.checkIdParam(),
 		UsersValidator.checkUpdateUser(),
 		MiddlewareValidatorError.handleValidationError,
@@ -36,7 +36,7 @@ export default (router: Router): void => {
 	);
 	
 	router.delete(
-		`${userBaseUrl}/:id`,
+		`${userBaseUrl}/delete/:id`,
 		UsersValidator.checkIdParam(),
 		MiddlewareValidatorError.handleValidationError,
 		UsersController.delete
