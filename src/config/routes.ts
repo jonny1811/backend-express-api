@@ -1,6 +1,7 @@
 import { Express, Router } from 'express';
 import { readdirSync } from 'fs';
 import { join } from 'path';
+import env from '../config/env';
 
 import swaggerUi from 'swagger-ui-express';
 import * as fs from 'fs';
@@ -12,10 +13,10 @@ const swaggerDocument = JSON.parse(swaggerData);
 
 export default (app: Express): void => {
     const router = Router();
-    app.use('/api', router);
+    app.use(env.baseUrl, router);
 
     app.use(
-      '/api/docs',
+      env.docsUrl,
       swaggerUi.serve, 
       swaggerUi.setup(swaggerDocument, null, null, customCss)
     );
