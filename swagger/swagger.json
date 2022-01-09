@@ -1,0 +1,336 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a simple example NodeJS API with Express, TS, Sequelize and Sqlite3",
+        "version": "1.0.0",
+        "title": "Users API",
+        "contact": {
+            "email": "jonnyda1811@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "schemes": ["http"],
+    "host": "localhost:9000",
+    "basePath": "/api",
+    "paths" : {
+        "/users/read" : {
+            "get" : {
+                "summary" : "Get all Users",
+                "description": "Get all Users",
+                "produces": ["application/json"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/UsersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid status value",
+                        "schema": {
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/read/{id}" : {
+            "get" : {
+                "summary" : "Get a User profile",
+                "description": "Get a User profile",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id that needs to be read",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user" : {
+                                    "type": "object",
+                                    "$ref": "#/definitions/UserResponse"
+                                } 
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found value",
+                        "schema": {
+                            "$ref": "#/definitions/NotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid status value",
+                        "schema": {
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/create" : {
+            "post" : {
+                "summary" : "Save the User data",
+                "description": "Save the User data",
+                "produces": ["application/json"],
+                "consumes": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "user object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user" : {
+                                    "type": "object",
+                                    "$ref": "#/definitions/User"
+                                } 
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user" : {
+                                    "type": "object",
+                                    "$ref": "#/definitions/UserResponse"
+                                } 
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid status value",
+                        "schema": {
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/update/{id}" : {
+            "put" : {
+                "summary" : "Update the User data",
+                "description": "Update the User data",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id that needs to be updated",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "user object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "user" : {
+                                    "type": "object",
+                                    "$ref": "#/definitions/User"
+                                } 
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message" : {
+                                    "type": "string",
+                                    "description": "Updated User profile"
+                                },
+                                "ok": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found value",
+                        "schema": {
+                            "$ref": "#/definitions/NotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid status value",
+                        "schema": {
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/delete/{id}" : {
+            "delete" : {
+                "summary" : "Delete the User data",
+                "description": "Delete the User data",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id that needs to be deleted",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message" : {
+                                    "type": "string"
+                                },
+                                "ok": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "example": {
+                                "message": "Deleted User profile",
+                                "ok": true
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found value",
+                        "schema": {
+                            "$ref": "#/definitions/NotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid status value",
+                        "schema": {
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        }
+    }, 
+    "definitions": {
+        "UsersResponse": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                                
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "ok": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "NotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string"
+                },
+                "ok": {
+                    "type": "boolean"
+                }
+            },
+            "example": {
+                "msg": "Can not find existing User",
+                "ok": false
+            }
+        },
+        "InvalidResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "route": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "status": 500,
+                "msg": "fail to read by id",
+                "route": "/routeName/:id"
+            }
+        }
+    }
+}

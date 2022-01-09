@@ -33,7 +33,7 @@ Users.init(
 	{
 		sequelize: sequelizeConnection,
 		tableName: 'User',
-        paranoid: true
+		timestamps: false,
 	}
 );
 
